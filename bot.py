@@ -17,10 +17,15 @@ bot.
 import os
 from dotenv import load_dotenv
 import logging
+from google.cloud import dialogflow
 
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
+
+load_dotenv()
+credentials = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+project_id = os.getenv('PROJECT_ID')
 # Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -45,9 +50,30 @@ def help_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Help!')
 
 
-def echo(update: Update, context: CallbackContext) -> None:
-    """Echo the user message."""
-    update.message.reply_text(update.message.text)
+def detect_intent_texts(project_id, session_id, text, language_code):
+    """Returns the result of detect intent with texts as inputs.
+
+    Using the same `session_id` between requests allows continuation
+    of the conversation."""
+
+    session_client = dialogflow.SessionsClient()
+
+    session = session_client.session_path(project_id, session_id)
+
+    text_input = dialogflow.TextInput(text=text, language_code=language_code)
+
+    query_input = dialogflow.QueryInput(text=text_input)
+
+    response = session_client.detect_intent(
+        request={"session": session, "query_input": query_input}
+    )
+
+    return response.query_result.fulfillment_text
+
+
+def get_answer(update: Update, context: CallbackContext) -> None:
+    """Answer the user message."""
+    update.message.reply_text(detect_intent_texts(project_id, update.message.from_user.id, update.message.text, 'ru-RU'))
 
 
 def main() -> None:
@@ -64,7 +90,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", help_command))
 
     # on non command i.e message - echo the message on Telegram
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, get_answer))
 
     # Start the Bot
     updater.start_polling()
