@@ -3,19 +3,44 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 import os
 from dotenv import load_dotenv
 import random
+from google.cloud import dialogflow
+
 
 load_dotenv()
 vk_token = os.getenv('VK_TOKEN')
+project_id = os.getenv('PROJECT_ID')
 
 vk_session = vk.VkApi(token=vk_token)
 
 longpoll = VkLongPoll(vk_session)
 
 
-def echo(event, vk_api):
+def detect_intent_texts(project_id, session_id, text, language_code):
+    """Returns the result of detect intent with texts as inputs.
+
+    Using the same `session_id` between requests allows continuation
+    of the conversation."""
+
+    session_client = dialogflow.SessionsClient()
+
+    session = session_client.session_path(project_id, session_id)
+
+    text_input = dialogflow.TextInput(text=text, language_code=language_code)
+
+    query_input = dialogflow.QueryInput(text=text_input)
+
+    response = session_client.detect_intent(
+        request={"session": session, "query_input": query_input}
+    )
+
+    return response.query_result.fulfillment_text
+
+
+def get_answer(event, vk_api):
+    """Answer the user message."""
     vk_api.messages.send(
         user_id=event.user_id,
-        message=event.text,
+        message=(detect_intent_texts(project_id, event.user_id, event.text, 'ru-RU')),
         random_id=random.randint(1,1000)
     )
 
@@ -26,4 +51,4 @@ if __name__ == "__main__":
     longpoll = VkLongPoll(vk_session)
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            echo(event, vk_api)
+            get_answer(event, vk_api)
