@@ -21,11 +21,9 @@ from google.cloud import dialogflow
 
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from functools import partial
 
 
-load_dotenv()
-credentials = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
-project_id = os.environ['PROJECT_ID']
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +70,9 @@ def get_answer(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     """Start the bot."""
+    load_dotenv()
+    credentials = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+    project_id = os.environ['PROJECT_ID']
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
     )
@@ -84,7 +85,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
 
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, get_answer))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, partial(get_answer, project_id)))
 
     updater.start_polling()
 
