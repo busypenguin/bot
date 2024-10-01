@@ -29,7 +29,7 @@ def detect_intent_texts(project_id, session_id, text, language_code):
 
 def get_answer(event, vk_api):
     """Answer the user message."""
-    response = detect_intent_texts(project_id, event.user_id, event.text, 'ru-RU')
+    response = detect_intent_texts(project_id, f'vk_{event.user_id}', event.text, 'ru-RU')
     if not response.query_result.intent.is_fallback:
         answer = response.query_result.fulfillment_text
         vk_api.messages.send(

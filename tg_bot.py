@@ -67,7 +67,7 @@ def detect_intent_texts(project_id, session_id, text, language_code):
 
 def get_answer(update: Update, context: CallbackContext) -> None:
     """Answer the user message."""
-    update.message.reply_text(detect_intent_texts(project_id, update.message.from_user.id, update.message.text, 'ru-RU'))
+    update.message.reply_text(detect_intent_texts(project_id, f'tg_{update.message.from_user.id}', update.message.text, 'ru-RU'))
 
 
 def main() -> None:
