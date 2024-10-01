@@ -6,11 +6,6 @@ import random
 from google.cloud import dialogflow
 
 
-load_dotenv()
-vk_token = os.getenv('VK_TOKEN')
-project_id = os.getenv('PROJECT_ID')
-
-
 def detect_intent_texts(project_id, session_id, text, language_code):
     """Returns the result of detect intent with texts as inputs.
 
@@ -45,6 +40,9 @@ def get_answer(event, vk_api):
 
 
 if __name__ == "__main__":
+    load_dotenv()
+    vk_token = os.getenv('VK_TOKEN')
+    project_id = os.getenv('PROJECT_ID')
     vk_session = vk.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
