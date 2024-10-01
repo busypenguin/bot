@@ -26,11 +26,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 load_dotenv()
 credentials = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 project_id = os.environ['PROJECT_ID']
-# Enable logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
 
+# Enable logging
 logger = logging.getLogger(__name__)
 
 
@@ -78,6 +75,9 @@ def get_answer(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     """Start the bot."""
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+    )
     tg_token = os.getenv('TELEGRAM_BOT_TOKEN')
     # Create the Updater and pass it your bot's token.
     updater = Updater(tg_token)
