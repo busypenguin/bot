@@ -32,8 +32,8 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
 
 if __name__ == "__main__":
     load_dotenv()
-    credentials = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
-    project_id = os.getenv('PROJECT_ID')
+    credentials = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+    project_id = os.environ['PROJECT_ID']
     response = requests.get('https://dvmn.org/media/filer_public/a7/db/a7db66c0-1259-4dac-9726-2d1fa9c44f20/questions.json')
     intents = response.json()
     for intent in intents:

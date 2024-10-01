@@ -24,8 +24,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 
 
 load_dotenv()
-credentials = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
-project_id = os.getenv('PROJECT_ID')
+credentials = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+project_id = os.environ['PROJECT_ID']
 # Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
