@@ -33,13 +33,6 @@ VK_TOKEN - токен вашей группы в ВК
 ```python3 tg_bot.py``` для запуска бота в телеграмме, или ```python3 vk_bot.py``` для запукска бота в ВК
 
 
-### Примеры работы ботов
-
-![Пример работы бота в VK](https://gist.github.com/user-attachments/assets/6e43a369-3f5a-4b9a-8bd7-1c6882b521d8)
-
-![Пример работы бота в ТГ](https://gist.github.com/user-attachments/assets/10985e83-1d64-47c7-8485-8a8910ad9145)
-
-
 ### Цель проекта
 
 Код написан в образовательных целях на онлайн-курсе для веб-разработчиков [dvmn.org](https://dvmn.org/).
